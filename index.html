@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <title>YASO Developer - الطلب السريع</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    :root{
+      --bg-main:#020617;
+      --bg-card:#020617ee;
+      --gold:#facc6b;
+      --gold-soft:#fbbf24;
+      --accent:#38bdf8;
+      --text:#e5e7eb;
+      --danger:#f97373;
+    }
+
+    *{box-sizing:border-box;margin:0;padding:0;font-family:'Cairo',system-ui,sans-serif;}
+
+    body{
+      min-height:100vh;
+      color:var(--text);
+      background:radial-gradient(circle at top, #1f2937 0, #020617 45%, #000 100%);
+      overflow-x:hidden;
+      position:relative;
+    }
+
+    /* نجوم / توهج فضائي */
+    body::before, body::after{
+      content:"";
+      position:fixed;
+      inset:-50%;
+      background:
+        radial-gradient(circle at 10% 20%, #ffffff33 0, transparent 40%),
+        radial-gradient(circle at 80% 10%, #fde68a33 0, transparent 40%),
+        radial-gradient(circle at 50% 80%, #38bdf833 0, transparent 45%);
+      opacity:0.35;
+      z-index:-2;
+    }
+    body::after{
+      filter:blur(4px);
+      opacity:0.25;
+    }
+
+    header{
+      max-width:1100px;
+      margin:18px auto 0;
+      padding:14px 18px;
+      border-radius:18px;
+      background:linear-gradient(135deg,#020617dd,#020617bb);
+      border:1px solid #1f2937;
+      box-shadow:0 0 25px #000a;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+    }
+
+    .brand{
+      display:flex;
+      align-items:center;
+      gap:10px;
+    }
+    .logo-circle{
+      width:42px;
+      height:42px;
+      border-radius:999px;
+      border:2px solid var(--gold);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      box-shadow:0 0 18px #facc6b66;
+      font-weight:700;
+      font-size:20px;
+      color:var(--gold);
+    }
+    .brand-text h1{
+      font-size:20px;
+      color:var(--gold);
+      text-shadow:0 0 14px #facc6b88;
+    }
+    .brand-text p{
+      font-size:12px;
+      color:#9ca3af;
+    }
+
+    .user-chip{
+      padding:8px 14px;
+      border-radius:999px;
+      background:#0b1120;
+      border:1px solid #1f2937;
+      font-size:13px;
+      color:#cbd5f5;
+      display:flex;
+      align-items:center;
+      gap:6px;
+    }
+    .dot-online{
+      width:8px;
+      height:8px;
+      border-radius:999px;
+      background:#22c55e;
+      box-shadow:0 0 8px #22c55e;
+    }
+
+    main{
+      max-width:1100px;
+      margin:20px auto 40px;
+      padding:0 10px 30px;
+    }
+
+    /* كارت عام */
+    .card{
+      background:var(--bg-card);
+      border-radius:22px;
+      border:1px solid #1f2937;
+      box-shadow:0 0 35px #000c;
+      padding:24px 18px 20px;
+      margin-bottom:20px;
+    }
+
+    .card-title{
+      color:var(--gold);
+      font-size:18px;
+      margin-bottom:8px;
+      text-shadow:0 0 10px #facc6b55;
+    }
+    .card-sub{
+      font-size:13px;
+      color:#9ca3af;
+      margin-bottom:16px;
+      line-height:1.7;
+    }
+
+    .row{
+      display:flex;
+      flex-wrap:wrap;
+      gap:12px;
+    }
+    .row .field{flex:1 1 160px;}
+
+    label{
+      display:block;
+      font-size:12px;
+      margin-bottom:4px;
+      color:#d1d5db;
+    }
+
+    input, select, textarea{
+      width:100%;
+      background:#020617;
+      border-radius:12px;
+      border:1px solid #1f2937;
+      padding:10px 11px;
+      color:var(--text);
+      font-size:13px;
+      outline:none;
+      transition:border .15s, box-shadow .15s, transform .1s;
+    }
+    input:focus, select:focus, textarea:focus{
+      border-color:var(--gold-soft);
+      box-shadow:0 0 0 1px #facc6b33,0 0 18px #facc6b33;
+      transform:translateY(-1px);
+    }
+    textarea{min-height:90px;resize:vertical;}
+
+    .btn{
+      border:none;
+      cursor:pointer;
+      border-radius:999px;
+      padding:10px 18px;
+      font-size:14px;
+      font-weight:600;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap:6px;
+      transition:background .15s, transform .1s, box-shadow .15s;
+      white-space:nowrap;
+    }
+    .btn-primary{
+      background:linear-gradient(135deg,#facc6b,#fbbf24);
+      color:#111827;
+      box-shadow:0 0 22px #facc6b55;
+    }
+    .btn-primary:hover{
+      transform:translateY(-1px);
+      box-shadow:0 0 30px #facc6baa;
+    }
+    .btn-ghost{
+      background:#020617;
+      color:#e5e7eb;
+      border:1px solid #1f2937;
+    }
+    .btn-ghost:hover{
+      border-color:#4b5563;
+      transform:translateY(-1px);
+    }
+
+    .btn-bar{
+      margin-top:14px;
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+    }
+
+    /* كروت الخدمات */
+    .sections-grid{
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+      gap:16px;
+      margin-top:10px;
+    }
+
+    .sec-card{
+      background:#020617cc;
+      border-radius:20px;
+      border:1px solid #111827;
+      padding:16px 14px 14px;
+      position:relative;
+      overflow:hidden;
+    }
+    .sec-card::before{
+      content:"";
+      position:absolute;
+      inset:-60%;
+      background:conic-gradient(from 200deg,
+        transparent 0 30%, #facc6b33 30% 40%, transparent 40% 70%, #38bdf833 70% 80%, transparent 80% 100%);
+      opacity:0;
+      transition:opacity .3s;
+      pointer-events:none;
+    }
+    .sec-card:hover::before{opacity:1;}
+    .sec-inner{
+      position:relative;
+      z-index:1;
+    }
+    .sec-title{
+      font-size:16px;
+      color:var(--gold);
+      margin-bottom:6px;
+    }
+    .sec-body{font-size:13px;color:#9ca3af;margin-bottom:10px;line-height:1.8;}
+
+    .sec-body ul{
+      margin:5px 0 0 0;
+      padding-left:18px;
+      list-style:disc;
+    }
+
+    .badge{
+      display:inline-flex;
+      align-items:center;
+      gap:4px;
+      border-radius:999px;
+      padding:3px 9px;
+      font-size:11px;
+      background:#111827;
+      color:#e5e7eb;
+      margin-bottom:8px;
+    }
+
+    footer{
+      max-width:1100px;
+      margin:0 auto 20px;
+      padding:0 12px;
+      font-size:12px;
+      color:#6b7280;
+      display:flex;
+      justify-content:space-between;
+      flex-wrap:wrap;
+      gap:8px;
+    }
+    footer a{color:var(--gold-soft);text-decoration:none;}
+
+    /* مودال الطلب السريع */
+    .backdrop{
+      position:fixed;
+      inset:0;
+      background:#020617dd;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      z-index:40;
+      opacity:0;
+      visibility:hidden;
+      transition:opacity .2s,visibility .2s;
+    }
+    .backdrop.show{
+      opacity:1;
+      visibility:visible;
+    }
+    .modal{
+      width:100%;
+      max-width:700px;
+      background:#020617;
+      border-radius:22px;
+      border:1px solid #1f2937;
+      box-shadow:0 0 40px #000d;
+      padding:20px 18px 16px;
+      position:relative;
+    }
+    .modal-title{
+      font-size:17px;
+      color:var(--gold);
+      margin-bottom:6px;
+    }
+    .modal-sub{
+      font-size:12px;
+      color:#9ca3af;
+      margin-bottom:14px;
+      line-height:1.7;
+    }
+    .close-x{
+      position:absolute;
+      inset-inline-start:14px;
+      top:10px;
+      font-size:18px;
+      cursor:pointer;
+      color:#9ca3af;
+    }
+    .note{
+      font-size:11px;
+      color:#facc6b;
+      margin-top:4px;
+    }
+    .error{
+      font-size:11px;
+      color:var(--danger);
+      margin-top:4px;
+    }
+
+    @media(max-width:640px){
+      header{flex-direction:column;align-items:flex-start;}
+      .user-chip{align-self:flex-end;}
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="brand">
+    <div class="logo-circle">Y</div>
+    <div class="brand-text">
+      <h1>YASO Developer</h1>
+      <p>مواقع تعليمية • متاجر • أنظمة فواتير • أفكار خاصة</p>
+    </div>
+  </div>
+  <div class="user-chip">
+    <span class="dot-online"></span>
+    <span id="userChipText">زائر حالياً</span>
+  </div>
+</header>
+
+<main>
+  <!-- تسجيل الدخول البسيط -->
+  <section class="card" id="loginCard">
+    <div class="card-title">تسجيل دخول بسيط عشان نعرف نناديك 😊</div>
+    <div class="card-sub">
+      اكتب اسمك ورقم الواتساب، وبعدها هتظهر لك لوحة الخدمات و زر <strong>الطلب السريع</strong> عشان تبعت فكرتك كاملة في رسالة واحدة.
+    </div>
+
+    <div class="row">
+      <div class="field">
+        <label>الاسم الأول أو اسمك اللي تحب نناديك بيه *</label>
+        <input id="clientName" placeholder="مثال: ياسو، شادي، أستاذة مريم..." />
+      </div>
+      <div class="field">
+        <label>رقم التواصل على واتساب *</label>
+        <input id="clientPhone" placeholder="مثال: 0110xxxxxxx" />
+      </div>
+    </div>
+
+    <div class="btn-bar">
+      <button class="btn btn-primary" onclick="confirmLogin()">ابدأ الجولة في الموقع 🚀</button>
+    </div>
+  </section>
+
+  <!-- لوحة الخدمات بعد تسجيل الدخول -->
+  <section class="card" id="servicesCard" style="display:none;">
+    <div class="card-title" id="welcomeTitle">أهلاً يا صديقي 👋</div>
+    <div class="card-sub">
+      عندك كذا اختيار:
+      • تشوف تفاصيل <strong>المواقع الإلكترونية والمتاجر</strong>  
+      • تشوف <strong>الباقات التعليمية</strong> اللي جهزناها  
+      • أو تستخدم <strong>الطلب السريع</strong> وتحكي فكرتك مرة واحدة 💛
+    </div>
+
+    <div class="sections-grid">
+      <!-- مواقع إلكترونية -->
+      <article class="sec-card">
+        <div class="sec-inner">
+          <div class="badge">مواقع إلكترونية و متاجر</div>
+          <h3 class="sec-title">موقع أو متجر بشكل مرتب ومرن</h3>
+          <p class="sec-body">
+            مناسب لصفحات تعريف شخصية أو شركات صغيرة ومتاجر بسيطة أو متوسطة.  
+            بعض الأفكار اللي أقدر أشتغل عليها:
+            <ul>
+              <li>موقع تعريفي شخصي / براند شخصي.</li>
+              <li>موقع شركة أو نشاط تجاري صغير.</li>
+              <li>متجر بسيط لبيع منتجات معينة (ملابس – إكسسوارات – كروت...)</li>
+            </ul>
+          </p>
+          <button class="btn btn-ghost" onclick="openQuickOrder('موقع إلكتروني / متجر')">
+            اطلب شكل الموقع اللي في دماغك ✨
+          </button>
+        </div>
+      </article>
+
+      <!-- باقات تعليمية -->
+      <article class="sec-card">
+        <div class="sec-inner">
+          <div class="badge">الباقات التعليمية</div>
+          <h3 class="sec-title">منصة أو لعبة تعليمية للطلاب</h3>
+          <p class="sec-body">
+            شغلي في الجزء التعليمي مبني على التفاعل والتشجيع:  
+            <ul>
+              <li><strong>BASIC</strong>: لعبة أو مادة واحدة تفاعلية (أسئلة + تشجيع بسيط).</li>
+              <li><strong>ADVANCED</strong>: مادتين أو 3 + أصوات تشجيع + تصميم حيوي للثانوي أو الإعدادي.</li>
+              <li><strong>PREMIUM</strong>: منصة كاملة بعدة مواد (مثلاً 6 مواد)، تسجيل دخول، لوحة مدير بسيطة، وتقارير.</li>
+            </ul>
+            كمان فيه خيار <strong>موقع تعليمي تفصيلي</strong> بتحدد أنت شكله بالكامل.
+          </p>
+          <button class="btn btn-ghost" onclick="openQuickOrder('منصة / لعبة تعليمية (اختيار باقة BASIC / ADVANCED / PREMIUM)')">
+            اطلب باقة تعليمية تناسب طلابك 🎓
+          </button>
+        </div>
+      </article>
+
+      <!-- طلب سريع عام -->
+      <article class="sec-card">
+        <div class="sec-inner">
+          <div class="badge">طلب سريع</div>
+          <h3 class="sec-title">مش عايز تعقيد؟ احكي فكرتك بس 😄</h3>
+          <p class="sec-body">
+            لو لسه مش عارف فكرتك تمشي تحت أنهي نوع،  
+            اكتب كل التفاصيل مرة واحدة وأنا أقترح عليك أنسب شكل وسعر حسب اللي يناسبك فعلياً.
+          </p>
+          <button class="btn btn-primary" onclick="openQuickOrder('فكرة خاصة / مش محدد')">
+            افتح نموذج الطلب السريع ⚡
+          </button>
+        </div>
+      </article>
+    </div>
+  </section>
+</main>
+
+<!-- مودال الطلب السريع -->
+<div class="backdrop" id="quickModal">
+  <div class="modal">
+    <span class="close-x" onclick="closeQuickOrder()">✕</span>
+    <div class="modal-title">الطلب السريع – خلينا نفهم مشروعك من أول مرة 💡</div>
+    <div class="modal-sub">
+      اكتب كل حاجة مهمة عن فكرتك هنا. الرسالة هتتبعت على <strong>واتساب + تليجرام</strong> في نفس الوقت عشان أقدر أرجعلك بسهولة 🌟
+    </div>
+
+    <div class="row">
+      <div class="field">
+        <label>نوع الموقع أو الفكرة *</label>
+        <input id="q_type" placeholder="مثال: موقع تعليمي ثانوي – متجر منتجات – موقع شخصي..." />
+      </div>
+      <div class="field">
+        <label>الدولة *</label>
+        <input id="q_country" placeholder="مثال: مصر، السعودية، الإمارات..." />
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="field">
+        <label>أهم هدف من الموقع *</label>
+        <input id="q_goal" placeholder="مثال: بيع منتجات – تشجيع الطلبة – عرض خدمة معينة..." />
+      </div>
+      <div class="field">
+        <label>أهم حاجة تحب نركز عليها *</label>
+        <input id="q_focus" placeholder="مثال: الشكل – السرعة – الألعاب – لوحة تحكم – سهولة الاستخدام" />
+      </div>
+    </div>
+
+    <label>وصف تفصيلي لفكرة الموقع *</label>
+    <textarea id="q_details" placeholder="احكي براحتك: الأقسام اللي نفسك فيها، ألوان، لغة، تسجيل دخول، ألعاب، تقارير، أي تفاصيل إضافية..."></textarea>
+
+    <p class="note">
+      ملحوظة: الدفع المتاح حاليًا عن طريق <strong>محفظة كاش داخل مصر فقط</strong> 🇪🇬  
+      لكن الاستفسارات والطلبات المبدئية متاحة من أي دولة.
+    </p>
+    <p class="error" id="q_error" style="display:none;"></p>
+
+    <div class="btn-bar" style="margin-top:10px;">
+      <button class="btn btn-primary" onclick="sendQuickOrder()">إرسال الطلب على واتساب + تليجرام 📩</button>
+      <button class="btn btn-ghost" type="button" onclick="closeQuickOrder()">إلغاء</button>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <span>© YASO Developer – برمجة قريبة من حياتك مش بس للشركات 💛</span>
+  <span>
+    واتساب: <a href="https://wa.me/201109755332" target="_blank">01109755332</a> |
+    تليجرام: <a href="https://t.me/SOO654" target="_blank">@SOO654</a> |
+    جروب: <a href="https://t.me/YasuDeveloper" target="_blank">YasuDeveloper</a>
+  </span>
+</footer>
+
+<script>
+  let savedName="", savedPhone="";
+
+  function confirmLogin(){
+    const name = document.getElementById("clientName").value.trim();
+    const phone = document.getElementById("clientPhone").value.trim();
+    if(!name || !phone){
+      alert("من فضلك اكتب الاسم ورقم الواتساب أولاً 💛");
+      return;
+    }
+    savedName = name;
+    savedPhone = phone;
+    document.getElementById("userChipText").textContent = "مسجل باسم: " + name;
+    document.getElementById("welcomeTitle").textContent = "أهلاً يا " + name + " 👋 جاهزين نبني فكرتك؟";
+    document.getElementById("loginCard").style.display = "none";
+    document.getElementById("servicesCard").style.display = "block";
+  }
+
+  function openQuickOrder(prefillType){
+    document.getElementById("q_error").style.display="none";
+    if(prefillType){
+      document.getElementById("q_type").value = prefillType;
+    }
+    document.getElementById("quickModal").classList.add("show");
+  }
+
+  function closeQuickOrder(){
+    document.getElementById("quickModal").classList.remove("show");
+  }
+
+  function sendQuickOrder(){
+    const type   = document.getElementById("q_type").value.trim();
+    const country= document.getElementById("q_country").value.trim();
+    const goal   = document.getElementById("q_goal").value.trim();
+    const focus  = document.getElementById("q_focus").value.trim();
+    const details= document.getElementById("q_details").value.trim();
+    const errorEl= document.getElementById("q_error");
+
+    if(!type || !country || !goal || !focus || !details){
+      errorEl.textContent = "كل الخانات بعلامة * مهمة عشان أقدر أفهم فكرتك كويس 😉";
+      errorEl.style.display="block";
+      return;
+    }
+    errorEl.style.display="none";
+
+    const name = savedName || "غير محدد";
+    const phone= savedPhone || "غير محدد";
+
+    let msgText = "طلب جديد من موقع YASO Developer\n";
+    msgText += "-----------------------------\n";
+    msgText += "الاسم: " + name + "\n";
+    msgText += "رقم الواتساب الذي أدخله: " + phone + "\n";
+    msgText += "الدولة: " + country + "\n";
+    msgText += "نوع الموقع / الفكرة: " + type + "\n";
+    msgText += "الهدف الأساسي من الموقع: " + goal + "\n";
+    msgText += "أهم نقطة نركز عليها: " + focus + "\n";
+    msgText += "تفاصيل الفكرة:\n" + details + "\n";
+    msgText += "-----------------------------\n";
+    msgText += "الطلب تم من خلال صفحة الطلب السريع 🌌 YASO Developer";
+
+    const encoded = encodeURIComponent(msgText);
+
+    // واتساب
+    const waUrl = "https://wa.me/201109755332?text=" + encoded;
+    window.open(waUrl,"_blank");
+
+    // تليجرام (هتفتح الشات مع @SOO654 ومعاه النص في بعض الأجهزة)
+    const tgUrl = "https://t.me/SOO654?text=" + encoded;
+    setTimeout(()=>{ window.open(tgUrl,"_blank"); }, 500);
+
+    closeQuickOrder();
+  }
+</script>
+
+</body>
+</html>
