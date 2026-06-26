@@ -283,8 +283,8 @@ transform:translateY(-5px);
 border-color:#00d4ff;
 }
 
-.option input{
-margin-left:8px;
+.option input {
+  display: none;
 }
 
 .option strong{
@@ -456,4 +456,45 @@ gap:25px;
   border-color: #00d4ff;
   background: linear-gradient(135deg, rgba(0,212,255,.22), rgba(63,115,255,.16));
   box-shadow: 0 0 24px rgba(0,212,255,.25);
+}
+.hero {
+  padding: 45px 8%;
+}
+
+.hero h2 {
+  font-size: 42px;
+}
+
+.hero p {
+  font-size: 17px;
+}
+
+.screen {
+  padding: 24px;
+}
+
+.steps {
+  margin: 10px 0 35px;
+}
+
+.step {
+  width: 70px;
+  height: 70px;
+  font-size: 20px;
+}
+
+.order-layout {
+  padding: 0 8% 50px;
+}
+
+.form-card, .side-card {
+  padding: 24px;
+}
+
+.form-step h2 {
+  font-size: 28px;
+}
+
+textarea {
+  height: 120px;
 }
