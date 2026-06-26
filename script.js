@@ -40,9 +40,9 @@ current++;
 
 showStep(current);
 
-window.scrollTo({
-top:0,
-behavior:"smooth"
+document.getElementById("order").scrollIntoView({
+  behavior: "smooth",
+  block: "start"
 });
 
 }
@@ -57,9 +57,9 @@ current--;
 
 showStep(current);
 
-window.scrollTo({
-top:0,
-behavior:"smooth"
+document.getElementById("order").scrollIntoView({
+  behavior: "smooth",
+  block: "start"
 });
 
 }
@@ -376,4 +376,13 @@ s.y+=Math.sin(angle)*25;
 
 });
 
+});
+document.querySelectorAll(".option input").forEach((input) => {
+  input.addEventListener("change", () => {
+    document
+      .querySelectorAll(`input[name="${input.name}"]`)
+      .forEach((i) => i.closest(".option").classList.remove("selected"));
+
+    input.closest(".option").classList.add("selected");
+  });
 });
