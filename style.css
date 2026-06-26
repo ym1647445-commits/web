@@ -452,3 +452,8 @@ gap:25px;
 }
 
 }
+.option.selected {
+  border-color: #00d4ff;
+  background: linear-gradient(135deg, rgba(0,212,255,.22), rgba(63,115,255,.16));
+  box-shadow: 0 0 24px rgba(0,212,255,.25);
+}
